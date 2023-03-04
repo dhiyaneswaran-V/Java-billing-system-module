@@ -1,0 +1,239 @@
+//java module (Billing system)
+
+import java.util.*;
+class Bill
+{
+    int qt,amt;
+    String pname;
+    void setall(String pname,int qt,int amt)
+    {
+        this.pname=pname;
+        this.qt=qt;
+        this.amt=amt;
+    }
+    void show()
+    {
+        System.out.println(pname+"      "+qt+"      "+amt);
+    }
+}
+class Product
+{
+    String pname;
+    int pr;
+    int id,qt,amt;
+    //Product(){}
+    void setall(String pname,int qt,int pr,int id)
+    {
+        this.pname=pname;
+        this.pr=pr;
+        this.id=id;
+        this.qt=qt;
+    }
+    void show()
+    {
+        System.out.print(pname+" "+pr+" "+id+" "+qt);
+    }
+    Boolean check(String pname){
+        return this.pname.equals(pname); 
+    }
+    int getprice()
+    {
+        return pr;
+    }
+}
+class Cashier
+{
+    int id;
+    String pw;
+    ArrayList <Product> p=new ArrayList<Product>();
+     ArrayList <Bill> b=new ArrayList<Bill>();
+    //Cashier(){}
+    void ch(int id,String pw)
+    {
+       this.id=id;
+       this.pw=pw;
+    }
+    boolean check(int id,String pw)
+    {
+        return this.pw.equals(pw) && this.id==id ;
+    }
+    void setpro(Product z)
+    {
+        p.add(z);
+    }
+    void setbill(Bill z)
+    {
+        b.add(z);
+    } 
+    void showproduct()
+    {
+        for(Product x:p)
+        {
+            x.show();
+        }
+    }
+    void showbill()
+    {
+        for(Bill x:b)
+        {
+            x.show();
+        }
+    }
+    int getprice(String pname)
+    {
+        for(Product x:p)
+        {
+            if(x.check(pname))
+            {
+                return x.getprice();
+            }
+        }
+        return -1;
+    }
+}
+public class Main
+{
+    static ArrayList<Cashier> c=new ArrayList<Cashier>();
+    static ArrayList<Product> p=new ArrayList<Product>();
+    static ArrayList<Bill> b=new ArrayList<Bill>();
+    public static void main(String[] args) 
+    {
+	   Scanner sc=new Scanner(System.in);
+	   String pname;
+	   int id,pr=0,qt,amt;
+	   String pw;
+	   while(true) 
+	   {
+	        System.out.println("1.Owner\n2.Cashier\n3.Exit\n");
+	        Scanner s=new Scanner(System.in);
+	        int ch1=s.nextInt();
+	        if(ch1==1) 
+	        {
+	            System.out.print("Enter Owner id :\n");
+                id=sc.nextInt();
+                System.out.print("Create Password :\n");
+                pw=sc.next();
+	            if(id==17&&pw.equals("OP"))
+	            {
+	                while(true) 
+	                {
+    	                 System.out.println("\n1.Report\n2.Add Cashier\n3.Exit\n");
+    	                 int ch2=sc.nextInt();
+    	                 if(ch2==1) 
+    	                 {
+    	                     System.out.println("1.Stock\n2.Bill\n");
+    	                     int n=sc.nextInt();
+    	                     if(n==1)
+    	                     {
+    	                       for(Cashier x:c) 
+    	                       {
+    	                           x.showproduct();
+    	                       }
+    	                     }
+    	                     if(n==2)
+    	                     {
+    	                        for(Bill x:b)
+    	                        {
+    	                            x.show();
+    	                        }
+    	                     }
+    	                 }
+    	                 else if(ch2==2)
+    	                 {
+                            System.out.print("Enter Cashier Id :\n");
+                            id=sc.nextInt();
+                            System.out.print("Create Password :\n");
+                            pw=sc.next();
+    	                    Cashier c1=new Cashier();
+    	                    c1.ch(id,pw);
+    	                    c.add(c1);
+    	                 }
+    	                 else if(ch2==3)
+    	                 {
+    	                     break;
+    	                 }
+        	        }
+    	       }
+    	    }
+    	    else if(ch1==2)
+    	    {
+    	        System.out.print("Enter Cashier Id :\n");
+                id=sc.nextInt();
+                System.out.print("Password :\n");
+                pw=sc.next();
+                int f=0;
+                Cashier x = new Cashier();
+    	        for(Cashier c1:c)
+    	        {
+    	           // c1.showcrd();
+    	           if(c1.check(id,pw))
+    	           {
+    	                x=c1;
+    	                f=1;
+    	                break;
+    	           }
+    	        }
+    	        if(f==1)
+    	        {
+    	            while(true) 
+    	            {
+    	                 System.out.println("1.Stock Entry\n2.Bill Entry\n3.Exit\n");
+    	                 int ch2=sc.nextInt();
+    	                 if(ch2==1) 
+    	                 {
+    	                     Product z = new Product();
+    	                     System.out.println("Enter Stock Name:");
+    	                     pname=sc.next();
+    	                     System.out.println("Enter Stock Id:");
+    	                     id=sc.nextInt();
+    	                     System.out.println("Enter Stock Price:");
+    	                     pr=sc.nextInt();
+    	                     System.out.println("Enter Quantity");
+    	                     qt=sc.nextInt();
+    	                     z.setall(pname,id,pr,qt);
+    	                     p.add(z);
+    	                     x.setpro(z);
+    	                 }
+    	                 else if(ch2==2)
+    	                 {
+    	                     Bill z=new Bill();
+    	                     System.out.println("Enter Quantity:");
+    	                     qt=sc.nextInt();
+    	                     System.out.println("Enter Product Name :");
+    	                     pname=sc.next();
+    	                     amt = qt*x.getprice(pname);
+    	                     z.setall(pname,qt,amt);
+    	                     System.out.println("pname   qt   amt");
+    	                     z.show();
+    	                     b.add(z);
+    	                 }
+    	                 else if(ch2==3)
+    	                 {
+    	                     break;
+    	                 }
+    	            }
+    	        }
+    	        else 
+    	            System.out.println("Invalid Password");
+    	}
+    	else if(ch1==3)
+    	{
+    	    break;
+    	}
+        }
+    }
+}
+
+
+
+
+
+
+
+
+		
+	
+
+
+
+
